@@ -157,8 +157,8 @@ Username cleared\nBio cleared\nProfile pics: Done!\n""")
 
 
 if __name__ == '__main__':
-    api_id = ""
-    api_hash = ""
+    api_id = int()
+    api_hash = str()
 
     if not api_id or not api_hash:
         raise AttributeError("Api hash and api id must be declared!")
