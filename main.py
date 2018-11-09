@@ -1,5 +1,6 @@
 import asyncio
 from telethon import TelegramClient
+from getpass import getpass
 
 # Telethon Errors
 from telethon.errors import SessionPasswordNeededError, PeerIdInvalidError, \
@@ -75,7 +76,7 @@ async def main():
                 exit("-2")
             except SessionPasswordNeededError:
                 try:
-                    await client.sign_in(password=input("2FA password: {}".format(" " * 7)))
+                    await client.sign_in(password=getpass("2FA password: {}".format(" " * 7)))
                 except (PasswordHashInvalidError, PasswordEmptyError):
                     print("-1, Password invalid")
                     sleep(5)
@@ -99,6 +100,12 @@ phone=      [{4}]
                    self_user.id,
                    self_user.phone)
     )
+    answer = input("Leave channels?\n(Y)es | (n)o\n")
+
+    if match(r'(y|yes)', answer, flags=IGNORECASE):
+        leavechat = True
+    else:
+        leavechat = False
     answer = input("Clear account? \n(Y)es | (n)o\n")
     cls()
     if match(r'(y|yes)', answer, flags=IGNORECASE):
@@ -112,7 +119,8 @@ phone=      [{4}]
                 try:
                     await client(DeleteHistoryRequest(_, 0))
                 except PeerIdInvalidError:
-                    await client(LeaveChannelRequest(_))
+                    if leavechat:
+                        await client(LeaveChannelRequest(_))
             except FloodWaitError as e:
                 print("Telegram limits number of requests, please wait for {} seconds".format(e.seconds))
                 print("When the limit passes, we will do everything ourselves\n")
